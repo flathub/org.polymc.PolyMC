@@ -1,6 +1,6 @@
 app-id: org.polymc.PolyMC
 runtime: org.kde.Platform
-runtime-version: "5.15"
+runtime-version: '5.15'
 sdk: org.kde.Sdk
 command: polymc
 finish-args:
@@ -20,13 +20,16 @@ modules:
     build-commands:
       - mkdir build
       - mkdir -p /app/bin
-      - cd build && JAVA_HOME=/run/build/compile/jdk PATH=$JAVA_HOME:$PATH JAVA_COMPILER=../jdk/bin/javac cmake -DLauncher_LAYOUT=lin-system -DCMAKE_INSTALL_PREFIX=/app/ .. && make -j$(nproc) install
+      - cd build && JAVA_HOME=/run/build/compile/jdk PATH=$JAVA_HOME:$PATH JAVA_COMPILER=../jdk/bin/javac
+        cmake -DLauncher_LAYOUT=lin-system -DCMAKE_INSTALL_PREFIX=/app/ .. && make
+        -j$(nproc) install
     sources:
       - type: git
         url: https://github.com/PolyMC/PolyMC.git
-        tag: "1.0.4"
+        tag: 1.0.4
         x-checker-data:
           type: git
+        commit: 915c658a5238dd64a319e5fffb62b6fcebe74117
       - type: archive
         url: https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17%2B35/OpenJDK17-jdk_x64_linux_hotspot_17_35.tar.gz
         sha256: 6f1335d9a7855159f982dac557420397be9aa85f3f7bc84e111d25871c02c0c7
@@ -34,7 +37,7 @@ modules:
         dest: jdk
       - type: patch
         path: patches/0001-Fix-DesktopServices.cpp-to-not-crash-when-using-flat.patch
-    cleanup: ["/share/applications/polymc.desktop"]
+    cleanup: [/share/applications/polymc.desktop]
   # old MC versions depend on Xrandr
   - name: xrandr
     buildsystem: autotools
@@ -42,7 +45,7 @@ modules:
       - type: archive
         url: https://xorg.freedesktop.org/archive/individual/app/xrandr-1.5.1.tar.xz
         sha256: 7bc76daf9d72f8aff885efad04ce06b90488a1a169d118dea8a2b661832e8762
-    cleanup: ["/share/man", "/bin/xkeystone"]
+    cleanup: [/share/man, /bin/xkeystone]
   # Install Java versions for different minecraft versions
   - name: java
     buildsystem: simple
@@ -71,8 +74,7 @@ modules:
         url: https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u312-b07/OpenJDK8U-jre_x64_linux_hotspot_8u312b07.tar.gz
         sha256: 18fd13e77621f712326bfcf79c3e3cc08c880e3e4b8f63a1e5da619f3054b063
         strip-components: 0
-    cleanup:
-      ["/jdk/**/man", "/jdk/**/legal", "/jdk/**/NOTICE", "/jdk/**/release"]
+    cleanup: [/jdk/**/man, /jdk/**/legal, /jdk/**/NOTICE, /jdk/**/release]
   # Prime-Run is a wrapper program for running minecraft with NVIDIA Graphics on a hybrid-gpu device
   - name: prime-run
     buildsystem: simple
@@ -90,12 +92,7 @@ modules:
   # Patched GLFW for Wayland and Minecraft
   - name: glfw
     buildsystem: cmake
-    config_opts:
-      [
-        "-DCMAKE_INSTALL_LIBDIR=lib",
-        "-DBUILD_SHARED_LIBS=ON",
-        "-DGLFW_USE_WAYLAND=ON",
-      ]
+    config_opts: [-DCMAKE_INSTALL_LIBDIR=lib, -DBUILD_SHARED_LIBS=ON, -DGLFW_USE_WAYLAND=ON]
     sources:
       - type: git
         url: https://github.com/glfw/glfw.git
@@ -111,4 +108,4 @@ modules:
           - glfw-patches/0007-libdecor-proper-decorations-with-title-and-window-bu.patch
           - glfw-patches/0008-Add-libdecoration-marker-to-stderr-warning.patch
           - glfw-patches/0009-Wayland-Fix-cursor-offset-when-shape-changes.patch
-    cleanup: ["/share/doc"]
+    cleanup: [/share/doc]
