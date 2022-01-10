@@ -1,7 +1,10 @@
 app-id: org.polymc.PolyMC
 runtime: org.kde.Platform
-runtime-version: '5.15'
+runtime-version: "5.15"
 sdk: org.kde.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.openjdk17
+  - org.freedesktop.Sdk.Extension.openjdk8
 command: polymc
 finish-args:
   - --share=ipc
@@ -39,6 +42,19 @@ modules:
         path: patches/0001-Fix-DesktopServices.cpp-to-not-crash-when-using-flat.patch
     cleanup: [/share/applications/polymc.desktop]
   # old MC versions depend on Xrandr
+  - name: openjdk17
+    buildsystem: simple
+    build-commands:
+      - mkdir -p /app/jdk/
+      - /usr/lib/sdk/openjdk17/install.sh
+      - cp -r /app/jre /app/jdk/17
+    cleanup: [/jre]
+  - name: openjdk8
+    buildsystem: simple
+    build-commands:
+      - /usr/lib/sdk/openjdk8/install.sh
+      - cp -r /app/jre /app/jdk/8
+    cleanup: [/jre]
   - name: xrandr
     buildsystem: autotools
     sources:
@@ -46,35 +62,6 @@ modules:
         url: https://xorg.freedesktop.org/archive/individual/app/xrandr-1.5.1.tar.xz
         sha256: 7bc76daf9d72f8aff885efad04ce06b90488a1a169d118dea8a2b661832e8762
     cleanup: [/share/man, /bin/xkeystone]
-  # Install Java versions for different minecraft versions
-  - name: java
-    buildsystem: simple
-    build-commands:
-      - mkdir -p /app/jdk
-      - mv ./* /app/jdk
-    sources:
-      # JDK 17 for MC 1.18
-      - type: archive
-        url: https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.1%2B12/OpenJDK17U-jre_x64_linux_hotspot_17.0.1_12.tar.gz
-        sha256: 9d58cb741509a88e0ae33eb022334fb900b409b198eca6fe76246f0677b392ad
-        strip-components: 0
-      # JDK for Minecraft 1.17 - 1.18
-      # note: I would like this to be JRE, but I couldnt find a JRE for java 16. Every other version has a build without devtools included.
-      - type: archive
-        url: https://github.com/adoptium/temurin16-binaries/releases/download/jdk-16.0.2%2B7/OpenJDK16U-jdk_x64_linux_hotspot_16.0.2_7.tar.gz
-        sha256: 323d6d7474a359a28eff7ddd0df8e65bd61554a8ed12ef42fd9365349e573c2c
-        strip-components: 0
-      # JDK 11 for 1.9 - 1.15.2
-      - type: archive
-        url: https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_x64_linux_hotspot_11.0.13_8.tar.gz
-        sha256: fb0a27e6e1f26a1ee79daa92e4cfe3ec0d676acfe114d99dd84b3414f056e8a0
-        strip-components: 0
-      # JDK 8 for pre1.9
-      - type: archive
-        url: https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u312-b07/OpenJDK8U-jre_x64_linux_hotspot_8u312b07.tar.gz
-        sha256: 18fd13e77621f712326bfcf79c3e3cc08c880e3e4b8f63a1e5da619f3054b063
-        strip-components: 0
-    cleanup: [/jdk/**/man, /jdk/**/legal, /jdk/**/NOTICE, /jdk/**/release]
   # Prime-Run is a wrapper program for running minecraft with NVIDIA Graphics on a hybrid-gpu device
   - name: prime-run
     buildsystem: simple
@@ -92,7 +79,12 @@ modules:
   # Patched GLFW for Wayland and Minecraft
   - name: glfw
     buildsystem: cmake
-    config_opts: [-DCMAKE_INSTALL_LIBDIR=lib, -DBUILD_SHARED_LIBS=ON, -DGLFW_USE_WAYLAND=ON]
+    config_opts:
+      [
+        -DCMAKE_INSTALL_LIBDIR=lib,
+        -DBUILD_SHARED_LIBS=ON,
+        -DGLFW_USE_WAYLAND=ON,
+      ]
     sources:
       - type: git
         url: https://github.com/glfw/glfw.git
