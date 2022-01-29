@@ -21,11 +21,10 @@ modules:
   - name: compile
     buildsystem: simple
     build-commands:
+      - ls /usr/lib/sdk/openjdk17/jvm/openjdk-17
       - mkdir build
       - mkdir -p /app/bin
-      - cd build && JAVA_HOME=/run/build/compile/jdk PATH=$JAVA_HOME:$PATH JAVA_COMPILER=../jdk/bin/javac
-        cmake -DLauncher_LAYOUT=lin-system -DCMAKE_INSTALL_PREFIX=/app/ .. && make
-        -j$(nproc) install
+      - cd build && JAVA_HOME=/usr/lib/sdk/openjdk17/jvm/openjdk-17 PATH=$JAVA_HOME:$PATH JAVA_COMPILER=/usr/lib/sdk/openjdk17/jvm/openjdk-17/bin/javac cmake -DLauncher_LAYOUT=lin-system -DCMAKE_INSTALL_PREFIX=/app/ .. && make -j$(nproc) install
     sources:
       - type: git
         url: https://github.com/PolyMC/PolyMC.git
@@ -33,15 +32,9 @@ modules:
         x-checker-data:
           type: git
         commit: 204e3dca22e5d4f14ded50e1dcd3f0af9ff3d88e
-      - type: archive
-        url: https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17%2B35/OpenJDK17-jdk_x64_linux_hotspot_17_35.tar.gz
-        sha256: 6f1335d9a7855159f982dac557420397be9aa85f3f7bc84e111d25871c02c0c7
-        archive-type: tar-gzip
-        dest: jdk
       - type: patch
         path: patches/0001-Fix-DesktopServices.cpp-to-not-crash-when-using-flat.patch
     cleanup: [/share/applications/polymc.desktop]
-  # old MC versions depend on Xrandr
   - name: openjdk17
     buildsystem: simple
     build-commands:
