@@ -2,3 +2,4 @@ flatbuild
 build.sh
 .flatpak-builder
 flatrepo
+polymc.flatpak
