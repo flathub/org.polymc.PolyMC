@@ -28,10 +28,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/PolyMC/PolyMC.git
-        tag: 1.0.6
-        x-checker-data:
-          type: git
-        commit: 204e3dca22e5d4f14ded50e1dcd3f0af9ff3d88e
+        commit: 076efc4cb2586edbc11868bd93f48cfe03eb5a6d
       - type: patch
         path: patches/0001-Fix-DesktopServices.cpp-to-not-crash-when-using-flat.patch
     cleanup: [/share/applications/polymc.desktop]
