@@ -21,10 +21,10 @@ modules:
   - name: compile
     buildsystem: simple
     build-commands:
-      - ls /usr/lib/sdk/openjdk17/jvm/openjdk-17
       - mkdir build
-      - mkdir -p /app/bin
       - cd build && JAVA_HOME=/usr/lib/sdk/openjdk17/jvm/openjdk-17 PATH=$JAVA_HOME:$PATH JAVA_COMPILER=/usr/lib/sdk/openjdk17/jvm/openjdk-17/bin/javac cmake -DLauncher_LAYOUT=lin-system -DCMAKE_INSTALL_PREFIX=/app/ .. && make -j$(nproc) install
+    # workaround for stupid capitalization
+      - mv /app/share/applications/org.polymc.polymc.desktop /app/share/applications/org.polymc.PolyMC.desktop
     sources:
       - type: git
         url: https://github.com/PolyMC/PolyMC.git
