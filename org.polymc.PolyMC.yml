@@ -23,12 +23,10 @@ modules:
     build-commands:
       - mkdir build
       - cd build && JAVA_HOME=/usr/lib/sdk/openjdk17/jvm/openjdk-17 PATH=$JAVA_HOME:$PATH JAVA_COMPILER=/usr/lib/sdk/openjdk17/jvm/openjdk-17/bin/javac cmake -DLauncher_LAYOUT=lin-system -DCMAKE_INSTALL_PREFIX=/app/ .. && make -j$(nproc) install
-    # workaround for stupid capitalization
-      - mv /app/share/applications/org.polymc.polymc.desktop /app/share/applications/org.polymc.PolyMC.desktop
     sources:
       - type: git
         url: https://github.com/PolyMC/PolyMC.git
-        commit: 076efc4cb2586edbc11868bd93f48cfe03eb5a6d
+        commit: 2f6973e08b661f3a21724c9dda2977c55d5a3d45
       - type: patch
         path: patches/0001-Fix-DesktopServices.cpp-to-not-crash-when-using-flat.patch
     cleanup: [/share/applications/polymc.desktop]
