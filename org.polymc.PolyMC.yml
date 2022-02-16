@@ -26,7 +26,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/PolyMC/PolyMC.git
-        commit: 48c20f5aaa3fff0bb6b9b5b400f767f972fb43b5
+        commit: 2cd837896dc66344b53141325d76bcb045036abf
       - type: patch
         path: patches/0001-Fix-DesktopServices.cpp-to-not-crash-when-using-flat.patch
     cleanup: [/share/applications/polymc.desktop]
