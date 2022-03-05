@@ -19,14 +19,17 @@ finish-args:
 modules:
   # Compile PolyMC
   - name: compile
-    buildsystem: simple
-    build-commands:
-      - mkdir build
-      - cd build && JAVA_HOME=/usr/lib/sdk/openjdk17/jvm/openjdk-17 PATH=$JAVA_HOME:$PATH JAVA_COMPILER=/usr/lib/sdk/openjdk17/jvm/openjdk-17/bin/javac cmake -DLauncher_LAYOUT=lin-system -DCMAKE_INSTALL_PREFIX=/app/ .. && make -j$(nproc) install
+    buildsystem: cmake
+    config-opts:
+      - -DLauncher_PORTABLE=OFF
+    build-options:
+      env:
+        JAVA_HOME: /usr/lib/sdk/openjdk17/jvm/openjdk-17
+        JAVA_COMPILER: /usr/lib/sdk/openjdk17/jvm/openjdk-17/bin/javac
     sources:
       - type: git
         url: https://github.com/PolyMC/PolyMC.git
-        commit: 88fc1e32ee6bb9338c97178aa2530e45899022cb
+        commit: ca211558b5a4ee8b0dec3471c92f952002216532
       - type: patch
         path: patches/0001-Fix-DesktopServices.cpp-to-not-crash-when-using-flat.patch
     cleanup: [/share/applications/polymc.desktop]
