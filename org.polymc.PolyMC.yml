@@ -31,7 +31,9 @@ modules:
         url: https://github.com/PolyMC/PolyMC.git
         tag: 1.1.0
       - type: patch
-        path: patches/0001-Fix-DesktopServices.cpp-to-not-crash-when-using-flat.patch
+        path: patches/0001-Fix-crash-in-Flatpak.patch
+      - type: patch
+        path: patches/0002-fix-metainfo-update-URLs.patch
     cleanup: [/share/applications/polymc.desktop]
   - name: openjdk17
     buildsystem: simple
