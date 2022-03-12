@@ -19,19 +19,17 @@ finish-args:
 modules:
   # Compile PolyMC
   - name: compile
-    buildsystem: simple
-    build-commands:
-      - ls /usr/lib/sdk/openjdk17/jvm/openjdk-17
-      - mkdir build
-      - mkdir -p /app/bin
-      - cd build && JAVA_HOME=/usr/lib/sdk/openjdk17/jvm/openjdk-17 PATH=$JAVA_HOME:$PATH JAVA_COMPILER=/usr/lib/sdk/openjdk17/jvm/openjdk-17/bin/javac cmake -DLauncher_LAYOUT=lin-system -DCMAKE_INSTALL_PREFIX=/app/ .. && make -j$(nproc) install
+    buildsystem: cmake
+    config-opts:
+      - -DLauncher_PORTABLE=OFF
+    build-options:
+      env:
+        JAVA_HOME: /usr/lib/sdk/openjdk17/jvm/openjdk-17
+        JAVA_COMPILER: /usr/lib/sdk/openjdk17/jvm/openjdk-17/bin/javac
     sources:
       - type: git
         url: https://github.com/PolyMC/PolyMC.git
-        tag: 1.0.6
-        x-checker-data:
-          type: git
-        commit: 204e3dca22e5d4f14ded50e1dcd3f0af9ff3d88e
+        commit: ca211558b5a4ee8b0dec3471c92f952002216532
       - type: patch
         path: patches/0001-Fix-DesktopServices.cpp-to-not-crash-when-using-flat.patch
     cleanup: [/share/applications/polymc.desktop]
@@ -55,7 +53,6 @@ modules:
         url: https://xorg.freedesktop.org/archive/individual/app/xrandr-1.5.1.tar.xz
         sha256: 7bc76daf9d72f8aff885efad04ce06b90488a1a169d118dea8a2b661832e8762
     cleanup: [/share/man, /bin/xkeystone]
-  # Prime-Run is a wrapper program for running minecraft with NVIDIA Graphics on a hybrid-gpu device
   - name: prime-run
     buildsystem: simple
     build-commands:
@@ -63,3 +60,20 @@ modules:
     sources:
       - type: file
         path: prime-run
+  - name: gamemode
+    buildsystem: meson
+    config-opts:
+      - -Dwith-sd-bus-provider=no-daemon
+      - -Dwith-examples=false
+    sources:
+      - type: git
+        url: https://github.com/FeralInteractive/gamemode
+        tag: "1.6.1"
+  - name: gamemoderun
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 data/gamemoderun -t /app/bin
+    sources:
+      - type: git
+        url: https://github.com/FeralInteractive/gamemode
+        tag: 1.6.1
