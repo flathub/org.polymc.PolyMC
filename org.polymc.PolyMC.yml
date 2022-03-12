@@ -1,6 +1,6 @@
 app-id: org.polymc.PolyMC
 runtime: org.kde.Platform
-runtime-version: "5.15-21.08"
+runtime-version: 5.15-21.08
 sdk: org.kde.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.openjdk17
@@ -24,14 +24,16 @@ modules:
       - ls /usr/lib/sdk/openjdk17/jvm/openjdk-17
       - mkdir build
       - mkdir -p /app/bin
-      - cd build && JAVA_HOME=/usr/lib/sdk/openjdk17/jvm/openjdk-17 PATH=$JAVA_HOME:$PATH JAVA_COMPILER=/usr/lib/sdk/openjdk17/jvm/openjdk-17/bin/javac cmake -DLauncher_LAYOUT=lin-system -DCMAKE_INSTALL_PREFIX=/app/ .. && make -j$(nproc) install
+      - cd build && JAVA_HOME=/usr/lib/sdk/openjdk17/jvm/openjdk-17 PATH=$JAVA_HOME:$PATH
+        JAVA_COMPILER=/usr/lib/sdk/openjdk17/jvm/openjdk-17/bin/javac cmake -DLauncher_LAYOUT=lin-system
+        -DCMAKE_INSTALL_PREFIX=/app/ .. && make -j$(nproc) install
     sources:
       - type: git
         url: https://github.com/PolyMC/PolyMC.git
-        tag: 1.0.6
+        tag: 1.1.0-pre
         x-checker-data:
           type: git
-        commit: 204e3dca22e5d4f14ded50e1dcd3f0af9ff3d88e
+        commit: 9f8983b570fe3ddb9f689e1223ff3d2c7fff8b53
       - type: patch
         path: patches/0001-Fix-DesktopServices.cpp-to-not-crash-when-using-flat.patch
     cleanup: [/share/applications/polymc.desktop]
