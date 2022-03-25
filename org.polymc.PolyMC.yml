@@ -15,6 +15,8 @@ finish-args:
   - --socket=pulseaudio
     # for Discord RPC mods
   - --filesystem=xdg-run/app/com.discordapp.Discord:create
+    # Mod drag&drop
+  - --filesystem=xdg-download:ro
 
 modules:
   # Compile PolyMC
@@ -29,11 +31,9 @@ modules:
     sources:
       - type: git
         url: https://github.com/PolyMC/PolyMC.git
-        tag: 1.1.0
+        commit: 92f3154e8f7c1421541a00ae7cf57f188cfe46a5
       - type: patch
         path: patches/0001-Fix-crash-in-Flatpak.patch
-      - type: patch
-        path: patches/0002-fix-metainfo-update-URLs.patch
     cleanup: [/share/applications/polymc.desktop]
   - name: openjdk17
     buildsystem: simple
