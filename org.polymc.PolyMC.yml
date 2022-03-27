@@ -31,7 +31,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/PolyMC/PolyMC.git
-        commit: 92f3154e8f7c1421541a00ae7cf57f188cfe46a5
+        tag: 1.1.1
       - type: patch
         path: patches/0001-Fix-crash-in-Flatpak.patch
     cleanup: [/share/applications/polymc.desktop]

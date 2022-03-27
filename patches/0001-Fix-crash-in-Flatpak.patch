@@ -1,66 +1,161 @@
-From 3a13ab4011a8c978be082d811a7e9b5421686cf3 Mon Sep 17 00:00:00 2001
+From 3672dbc5af1403c8ea1a1f36d2890fed7dd4c6a1 Mon Sep 17 00:00:00 2001
 From: dada513 <dada513@protonmail.com>
-Date: Sat, 1 Jan 2022 02:54:30 +0100
-Subject: [PATCH 1/2] Fix crash in Flatpak
+Date: Sun, 27 Mar 2022 12:43:49 +0200
+Subject: [PATCH] Fix flatpak properly
 
 ---
- launcher/DesktopServices.cpp | 20 --------------------
- 1 file changed, 20 deletions(-)
+ launcher/CMakeLists.txt      |  2 ++
+ launcher/DesktopServices.cpp | 48 +++++++++++++++++++++++++++++++-----
+ launcher/Flatpak.cpp         | 14 +++++++++++
+ launcher/Flatpak.h           |  4 +++
+ 4 files changed, 62 insertions(+), 6 deletions(-)
+ create mode 100644 launcher/Flatpak.cpp
+ create mode 100644 launcher/Flatpak.h
 
+diff --git a/launcher/CMakeLists.txt b/launcher/CMakeLists.txt
+index 98cb0a3b..1a16485e 100644
+--- a/launcher/CMakeLists.txt
++++ b/launcher/CMakeLists.txt
+@@ -582,6 +582,8 @@ SET(LAUNCHER_SOURCES
+     ApplicationMessage.cpp
+ 
+     # GUI - general utilities
++    Flatpak.h
++    Flatpak.cpp
+     DesktopServices.h
+     DesktopServices.cpp
+     VersionProxyModel.h
 diff --git a/launcher/DesktopServices.cpp b/launcher/DesktopServices.cpp
-index dcc1b0ce..f754d325 100644
+index dcc1b0ce..5de97210 100644
 --- a/launcher/DesktopServices.cpp
 +++ b/launcher/DesktopServices.cpp
-@@ -83,11 +83,7 @@ bool openDirectory(const QString &path, bool ensureExists)
-     {
+@@ -3,6 +3,7 @@
+ #include <QDesktopServices>
+ #include <QProcess>
+ #include <QDebug>
++#include "Flatpak.h"
+ 
+ /**
+  * This shouldn't exist, but until QTBUG-9328 and other unreported bugs are fixed, it needs to be a thing.
+@@ -84,7 +85,14 @@ bool openDirectory(const QString &path, bool ensureExists)
          return QDesktopServices::openUrl(QUrl::fromLocalFile(dir.absolutePath()));
      };
--#if defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD)
+ #if defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD)
 -    return IndirectOpen(f);
--#else
++    if(!Flatpak::IsFlatpak())
++    {
++        return IndirectOpen(f);
++    }
++    else
++    {
++        return f();
++    }
+ #else
      return f();
--#endif
- }
- 
- bool openFile(const QString &path)
-@@ -97,25 +93,13 @@ bool openFile(const QString &path)
-     {
+ #endif
+@@ -98,7 +106,14 @@ bool openFile(const QString &path)
          return QDesktopServices::openUrl(QUrl::fromLocalFile(path));
      };
--#if defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD)
+ #if defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD)
 -    return IndirectOpen(f);
--#else
++    if(!Flatpak::IsFlatpak())
++    {
++        return IndirectOpen(f);
++    }
++    else
++    {
++        return f();
++    }
+ #else
      return f();
--#endif
- }
- 
- bool openFile(const QString &application, const QString &path, const QString &workingDirectory, qint64 *pid)
- {
+ #endif
+@@ -109,10 +124,17 @@ bool openFile(const QString &application, const QString &path, const QString &wo
      qDebug() << "Opening file" << path << "using" << application;
--#if defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD)
--    // FIXME: the pid here is fake. So if something depends on it, it will likely misbehave
+ #if defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD)
+     // FIXME: the pid here is fake. So if something depends on it, it will likely misbehave
 -    return IndirectOpen([&]()
--    {
++    if(!Flatpak::IsFlatpak())
+     {
 -        return QProcess::startDetached(application, QStringList() << path, workingDirectory);
 -    }, pid);
--#else
++        return IndirectOpen([&]()
++        {
++            return QProcess::startDetached(application, QStringList() << path, workingDirectory);
++        }, pid);
++    }
++    else
++    {
++      return QProcess::startDetached(application, QStringList() << path, workingDirectory, pid);  
++    }
+ #else
      return QProcess::startDetached(application, QStringList() << path, workingDirectory, pid);
--#endif
- }
- 
- bool run(const QString &application, const QStringList &args, const QString &workingDirectory, qint64 *pid)
-@@ -139,11 +123,7 @@ bool openUrl(const QUrl &url)
+ #endif
+@@ -122,11 +144,18 @@ bool run(const QString &application, const QStringList &args, const QString &wor
+ {
+     qDebug() << "Running" << application << "with args" << args.join(' ');
+ #if defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD)
++    if(!Flatpak::IsFlatpak())
++    {
+     // FIXME: the pid here is fake. So if something depends on it, it will likely misbehave
+     return IndirectOpen([&]()
      {
+         return QProcess::startDetached(application, args, workingDirectory);
+     }, pid);
++    }
++    else
++    {
++        return QProcess::startDetached(application, args, workingDirectory, pid);
++    }
+ #else
+     return QProcess::startDetached(application, args, workingDirectory, pid);
+ #endif
+@@ -140,7 +169,14 @@ bool openUrl(const QUrl &url)
          return QDesktopServices::openUrl(url);
      };
--#if defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD)
+ #if defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD)
 -    return IndirectOpen(f);
--#else
++    if(!Flatpak::IsFlatpak())
++    {
++        return IndirectOpen(f);
++    }
++    else
++    {
++        return f();
++    }
+ #else
      return f();
--#endif
- }
- 
- }
+ #endif
+diff --git a/launcher/Flatpak.cpp b/launcher/Flatpak.cpp
+new file mode 100644
+index 00000000..8b61f903
+--- /dev/null
++++ b/launcher/Flatpak.cpp
+@@ -0,0 +1,14 @@
++#include <QFileInfo>
++
++namespace Flatpak
++{
++   bool IsFlatpak()
++   {
++     #ifdef Q_OS_LINUX
++     QFileInfo check_file("/.flatpak-info");
++     return check_file.exists();
++     #else
++     return false;
++     #endif
++   } 
++}
+diff --git a/launcher/Flatpak.h b/launcher/Flatpak.h
+new file mode 100644
+index 00000000..da6eb7c3
+--- /dev/null
++++ b/launcher/Flatpak.h
+@@ -0,0 +1,4 @@
++namespace Flatpak
++{
++    bool IsFlatpak();
++}
+\ No newline at end of file
 -- 
 2.35.1
 
