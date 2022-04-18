@@ -5,6 +5,13 @@ sdk: org.kde.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.openjdk17
   - org.freedesktop.Sdk.Extension.openjdk8
+add-extensions:
+  com.valvesoftware.Steam.Utility.gamescope:
+    version: stable
+    add-ld-path: lib
+    no-autodownload: true
+    directory: utils/gamescope
+
 command: polymc
 finish-args:
   - --share=ipc
@@ -17,13 +24,14 @@ finish-args:
   - --filesystem=xdg-run/app/com.discordapp.Discord:create
     # Mod drag&drop
   - --filesystem=xdg-download:ro
+  - --env=PATH=/app/bin:/app/utils/gamescope/bin:/usr/bin
 
 modules:
   # Compile PolyMC
   - name: compile
     buildsystem: cmake
     config-opts:
-      - -DLauncher_PORTABLE=OFF
+      - -DLauncher_BUILD_PLATFORM=flatpak
     build-options:
       env:
         JAVA_HOME: /usr/lib/sdk/openjdk17/jvm/openjdk-17
@@ -31,9 +39,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/PolyMC/PolyMC.git
-        tag: 1.1.1
-      - type: patch
-        path: patches/0001-Fix-crash-in-Flatpak.patch
+        tag: 1.2.0
     cleanup: [/share/applications/polymc.desktop]
   - name: openjdk17
     buildsystem: simple
@@ -79,3 +85,8 @@ modules:
       - type: git
         url: https://github.com/FeralInteractive/gamemode
         tag: 1.6.1
+  - name: extension-dirs
+    buildsystem: simple
+    build-commands:
+      - mkdir -p /app/utils/gamescope
+      - mkdir -p /app/bin
