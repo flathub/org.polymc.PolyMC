@@ -24,6 +24,7 @@ finish-args:
   - --filesystem=xdg-run/app/com.discordapp.Discord:create
     # Mod drag&drop
   - --filesystem=xdg-download:ro
+    # gamescope
   - --env=PATH=/app/bin:/app/utils/gamescope/bin:/usr/bin
 
 modules:
@@ -40,20 +41,16 @@ modules:
       - type: git
         url: https://github.com/PolyMC/PolyMC.git
         tag: 1.2.0
-    cleanup: [/share/applications/polymc.desktop]
-  - name: openjdk17
+  - name: openjdk
     buildsystem: simple
     build-commands:
       - mkdir -p /app/jdk/
       - /usr/lib/sdk/openjdk17/install.sh
       - cp -r /app/jre /app/jdk/17
-    cleanup: [/jre]
-  - name: openjdk8
-    buildsystem: simple
-    build-commands:
+      - rm -rf /app/jre
       - /usr/lib/sdk/openjdk8/install.sh
       - cp -r /app/jre /app/jdk/8
-    cleanup: [/jre]
+      - rm -rf /app/jre
   - name: xrandr
     buildsystem: autotools
     sources:
@@ -61,13 +58,6 @@ modules:
         url: https://xorg.freedesktop.org/archive/individual/app/xrandr-1.5.1.tar.xz
         sha256: 7bc76daf9d72f8aff885efad04ce06b90488a1a169d118dea8a2b661832e8762
     cleanup: [/share/man, /bin/xkeystone]
-  - name: prime-run
-    buildsystem: simple
-    build-commands:
-      - install -Dm755 prime-run /app/bin/prime-run
-    sources:
-      - type: file
-        path: prime-run
   - name: gamemode
     buildsystem: meson
     config-opts:
@@ -85,8 +75,16 @@ modules:
       - type: git
         url: https://github.com/FeralInteractive/gamemode
         tag: 1.6.1
-  - name: extension-dirs
+  - name: enhance
     buildsystem: simple
     build-commands:
       - mkdir -p /app/utils/gamescope
       - mkdir -p /app/bin
+      - install -Dm755 prime-run /app/bin/prime-run
+      - mv /app/bin/polymc /app/bin/polyrun
+      - install -Dm755 polymc /app/bin/polymc
+    sources:
+      - type: file
+        path: prime-run
+      - type: file
+        path: polymc
