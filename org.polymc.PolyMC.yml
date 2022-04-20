@@ -40,17 +40,16 @@ modules:
     sources:
       - type: git
         url: https://github.com/PolyMC/PolyMC.git
-        tag: 1.2.0
+        tag: 1.2.1
   - name: openjdk
     buildsystem: simple
     build-commands:
       - mkdir -p /app/jdk/
       - /usr/lib/sdk/openjdk17/install.sh
-      - cp -r /app/jre /app/jdk/17
-      - rm -rf /app/jre
+      - mv /app/jre /app/jdk/17
       - /usr/lib/sdk/openjdk8/install.sh
-      - cp -r /app/jre /app/jdk/8
-      - rm -rf /app/jre
+      - mv /app/jre /app/jdk/8
+    cleanup: [/jre]
   - name: xrandr
     buildsystem: autotools
     sources:
