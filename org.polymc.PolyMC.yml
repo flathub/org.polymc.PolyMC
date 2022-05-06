@@ -40,7 +40,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/PolyMC/PolyMC.git
-        tag: 1.2.1
+        branch: develop
   - name: openjdk
     buildsystem: simple
     build-commands:
