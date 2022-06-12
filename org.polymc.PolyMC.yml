@@ -41,8 +41,6 @@ modules:
       - type: git
         url: https://github.com/PolyMC/PolyMC.git
         branch: develop
-      - type: patch
-        path: metainfo.patch
   - name: openjdk
     buildsystem: simple
     build-commands:
