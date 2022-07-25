@@ -1,6 +1,6 @@
 app-id: org.polymc.PolyMC
 runtime: org.kde.Platform
-runtime-version: "5.12-21.08"
+runtime-version: "6.3"
 sdk: org.kde.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.openjdk17
@@ -33,6 +33,8 @@ modules:
     buildsystem: cmake
     config-opts:
       - -DLauncher_BUILD_PLATFORM=flatpak
+      - -DLauncher_QT_VERSION_MAJOR=6
+      - -DENABLE_LTO=ON
     build-options:
       env:
         JAVA_HOME: /usr/lib/sdk/openjdk17/jvm/openjdk-17
