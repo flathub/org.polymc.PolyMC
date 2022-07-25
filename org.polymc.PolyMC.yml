@@ -1,6 +1,6 @@
 app-id: org.polymc.PolyMC
 runtime: org.kde.Platform
-runtime-version: "5.15-21.08"
+runtime-version: "5.12-21.08"
 sdk: org.kde.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.openjdk17
