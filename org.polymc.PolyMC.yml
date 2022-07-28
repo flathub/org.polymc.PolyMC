@@ -28,6 +28,14 @@ finish-args:
   - --env=PATH=/app/bin:/app/utils/gamescope/bin:/usr/bin
 
 modules:
+  - name: qt5compat
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+    sources:
+      - type: archive
+        url: https://download.qt.io/archive/qt/6.3/6.3.1/submodules/qt5compat-everywhere-src-6.3.1.tar.xz
+        sha256: a43ec62bd778eaecf88ad7847118d1c2a471b0fcb820f93beb311d7ab9566cfd
   # Compile PolyMC
   - name: compile
     buildsystem: cmake
