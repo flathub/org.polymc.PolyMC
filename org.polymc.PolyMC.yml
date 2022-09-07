@@ -36,7 +36,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/git/git.git
-        tag: 2.37.3
+        commit: ac8035a2affdf30f2c691ad760826d955bba0507
 
 
   # Compile PolyMC
