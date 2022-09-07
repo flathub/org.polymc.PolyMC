@@ -28,6 +28,17 @@ finish-args:
   - --env=PATH=/app/bin:/app/utils/gamescope/bin:/usr/bin
 
 modules:
+  # Git, closes https://github.com/flathub/org.polymc.PolyMC/issues/21
+  - name: git
+    buildsystem: simple
+    build-commands:
+      - make prefix=/app install
+    sources:
+      - type: git
+        url: https://github.com/git/git.git
+        tag: 2.37.3
+
+
   # Compile PolyMC
   - name: compile
     buildsystem: cmake
