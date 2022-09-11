@@ -28,14 +28,20 @@ finish-args:
   - --env=PATH=/app/bin:/app/utils/gamescope/bin:/usr/bin
 
 modules:
-  - name: qt5compat
+  - name: qt6-core5compat
     buildsystem: cmake-ninja
-    config-opts:
-      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+    builddir: true
     sources:
       - type: archive
-        url: https://download.qt.io/archive/qt/6.3/6.3.1/submodules/qt5compat-everywhere-src-6.3.1.tar.xz
+        url: https://download.qt.io/official_releases/qt/6.3/6.3.1/submodules/qt5compat-everywhere-src-6.3.1.tar.xz
         sha256: a43ec62bd778eaecf88ad7847118d1c2a471b0fcb820f93beb311d7ab9566cfd
+        x-checker-data:
+          type: html
+          url: https://download.qt.io/official_releases/qt/6.3/
+          version-pattern: '>([\d\.-]*)/<'
+          url-template: https://download.qt.io/official_releases/qt/6.3/$version/submodules/qt5compat-everywhere-src-$version.tar.xz
+    post-install:
+      - ln -sr /app/lib/${FLATPAK_ARCH}-linux-gnu/libQt6Core5Compat.so* -t /app/lib
   # Compile PolyMC
   - name: compile
     buildsystem: cmake
