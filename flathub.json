@@ -1,3 +1,4 @@
 {
-  "only-arches": ["x86_64"]
+  "only-arches": ["x86_64"],
+  "end-of-life": "PolyMC is deprecated due to a hostile takeover by the lead dev; a replacement will soon be released. More info at https://discord.gg/kVGPVjWN3a"
 }
