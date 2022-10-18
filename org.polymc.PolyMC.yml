@@ -39,10 +39,8 @@ modules:
         JAVA_COMPILER: /usr/lib/sdk/openjdk17/jvm/openjdk-17/bin/javac
     sources:
       - type: git
-        url: https://github.com/PolyMC/PolyMC.git
-        tag: 1.4.2
-      - type: patch
-        path: 0001-Fix-meta.patch
+        url: https://github.com/PlaceholderMC/PrismLauncher.git
+        commit: 3773f2e7a55f7ccfb1d6a9b792e1061cf9a815c1
   - name: openjdk
     buildsystem: simple
     build-commands:
