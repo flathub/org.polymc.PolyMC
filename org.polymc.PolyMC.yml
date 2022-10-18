@@ -30,9 +30,10 @@ finish-args:
 modules:
   # Compile PolyMC
   - name: compile
-    buildsystem: cmake
+    buildsystem: cmake-ninja
     config-opts:
       - -DLauncher_BUILD_PLATFORM=flatpak
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
     build-options:
       env:
         JAVA_HOME: /usr/lib/sdk/openjdk17/jvm/openjdk-17
