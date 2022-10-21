@@ -1,4 +1,4 @@
 {
   "only-arches": ["x86_64"],
-  "publish-delay-hours": 1
+  "end-of-life": "This package is currently read-only until situation around OVE-20221017-0001 clarifies."
 }
