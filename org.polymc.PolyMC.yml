@@ -42,8 +42,6 @@ modules:
       - type: git
         url: https://github.com/PolyMC/PolyMC.git
         tag: 5.0
-      - type: patch
-        path: 0001-Fix-meta.patch
   - name: openjdk
     buildsystem: simple
     build-commands:
