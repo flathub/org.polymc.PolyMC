@@ -42,7 +42,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/PolyMC/PolyMC.git
-        tag: 6.1-flatpakfix
+        tag: 7.0
   - name: openjdk
     buildsystem: simple
     build-commands:
