@@ -1,17 +1,11 @@
 app-id: org.polymc.PolyMC
 runtime: org.kde.Platform
-runtime-version: "5.15-23.08"
+runtime-version: "5.15-24.08"
 sdk: org.kde.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.openjdk21
   - org.freedesktop.Sdk.Extension.openjdk17
   - org.freedesktop.Sdk.Extension.openjdk8
-add-extensions:
-  com.valvesoftware.Steam.Utility.gamescope:
-    version: stable
-    add-ld-path: lib
-    no-autodownload: true
-    directory: utils/gamescope
 
 command: polymc
 finish-args:
@@ -25,8 +19,12 @@ finish-args:
   - --filesystem=xdg-run/app/com.discordapp.Discord:create
     # Mod drag&drop
   - --filesystem=xdg-download:ro
-    # gamescope
-  - --env=PATH=/app/bin:/app/utils/gamescope/bin:/usr/bin
+    # PATH
+  - --env=PATH=/app/bin:/usr/lib/extensions/vulkan/MangoHud/bin:/usr/lib/extensions/vulkan/gamescope/bin:/usr/bin
+    # Gamescope
+  - --env=LD_LIBRARY_PATH=/usr/lib/extensions/vulkan/gamescope/lib
+    # MangoHud
+  - --filesystem=xdg-config/MangoHud:ro
 
 modules:
   # Compile PolyMC
@@ -58,8 +56,8 @@ modules:
     buildsystem: autotools
     sources:
       - type: archive
-        url: https://xorg.freedesktop.org/archive/individual/app/xrandr-1.5.1.tar.xz
-        sha256: 7bc76daf9d72f8aff885efad04ce06b90488a1a169d118dea8a2b661832e8762
+        url: https://xorg.freedesktop.org/archive/individual/app/xrandr-1.5.3.tar.xz
+        sha256: f8dd7566adb74147fab9964680b6bbadee87cf406a7fcff51718a5e6949b841c
     cleanup: [/share/man, /bin/xkeystone]
   - name: gamemode
     buildsystem: meson
@@ -69,7 +67,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/FeralInteractive/gamemode
-        tag: "1.8.1"
+        tag: "1.8.2"
   - name: gamemoderun
     buildsystem: simple
     build-commands:
@@ -77,11 +75,10 @@ modules:
     sources:
       - type: git
         url: https://github.com/FeralInteractive/gamemode
-        tag: 1.8.1
+        tag: 1.8.2
   - name: enhance
     buildsystem: simple
     build-commands:
-      - mkdir -p /app/utils/gamescope
       - mkdir -p /app/bin
       - install -Dm755 prime-run /app/bin/prime-run
       - mv /app/bin/polymc /app/bin/polyrun
