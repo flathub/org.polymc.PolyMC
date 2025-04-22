@@ -23,8 +23,6 @@ finish-args:
   - --env=PATH=/app/bin:/usr/lib/extensions/vulkan/MangoHud/bin:/usr/lib/extensions/vulkan/gamescope/bin:/usr/bin
     # Gamescope
   - --env=LD_LIBRARY_PATH=/usr/lib/extensions/vulkan/gamescope/lib
-    # MangoHud
-  - --filesystem=xdg-config/MangoHud:ro
 
 modules:
   # Compile PolyMC
