@@ -43,7 +43,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/PolyMC/PolyMC.git
-        tag: 7.1
+        tag: "7.1"
   - name: openjdk
     buildsystem: simple
     build-commands:
