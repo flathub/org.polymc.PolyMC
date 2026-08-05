@@ -43,7 +43,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/PolyMC/PolyMC.git
-        tag: 7.0
+        tag: "7.1"
   - name: openjdk
     buildsystem: simple
     build-commands:
@@ -72,7 +72,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/FeralInteractive/gamemode
-        tag: "1.8.1"
+        tag: "1.8.2"
   - name: gamemoderun
     buildsystem: simple
     build-commands:
@@ -80,7 +80,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/FeralInteractive/gamemode
-        tag: 1.8.1
+        tag: 1.8.2
   - name: enhance
     buildsystem: simple
     build-commands:
